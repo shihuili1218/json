@@ -612,7 +612,7 @@ var jsonCompositeTemplate = '<div id="json-composite">'+
                                 '</div>'+
 							'</div>',
 	validatorTemplate = '<form class="JSONValidate" method="post" action="." name="JSONValidate">'+
-							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter anything to validate..."></textarea>'+
+							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter anything(json, xml, javascript) to validate..."></textarea>'+
 							'<a href="#" title="Run validation" class="button validate"><span class="icon">Lint Me!</span></a>'+
                             '<a href="#" title="Compress content" class="button compress"><span class="icon">Compress Content</span></a>'+
                             '<a href="#" title="Removes escape characters" class="button escape"><span class="text">\\\"</span></a>'+
@@ -836,16 +836,33 @@ var FADE_SPEED = 100,
 	        	return;
 	        }
 
-	        var jsonVal = $.trim(this.textarea.val());
-			// this.validate();
-            this.routeModel();
+            var type = this.routeModel();
+            if (type === "xml"){
+                this.checkXML();
+            }else if(type === "json"){
+                this.validate();
+            }else{
+            
+            }
             this.textarea.scrollLeft(0);
 		},
 
         onCompress : function (ev){
-            var content = $.trim(this.textarea.val());
-            var compress = JSON.stringify(JSON.parse(content));
-            this.textarea.val(compress);
+            
+            var type = this.routeModel();
+            if (type === "xml") {
+                this.checkXML();
+                var content = $.trim(this.textarea.val());
+                var compress = compressXML(content, false);
+                this.textarea.val(compress);
+            } else if(type === "json") {
+                var content = $.trim(this.textarea.val());
+                var compress = JSON.stringify(JSON.parse(content));
+                this.textarea.val(compress);
+            } else {
+            
+            }
+
         },
 
         onEscape : function (ev){
@@ -889,12 +906,12 @@ var FADE_SPEED = 100,
 		},
 
         routeModel : function () {
-            var jsonVal = this.textarea.val();
+            var jsonVal = $.trim(this.textarea.val());
             jsonVal = jsonVal.trim();
             if (jsonVal.startsWith("<") && jsonVal.endsWith(">")){
-                this.checkXML();
+                return "xml";
             }else{
-                this.validate();
+                return "json";
             }
         },
 
