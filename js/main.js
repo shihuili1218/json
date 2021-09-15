@@ -612,11 +612,11 @@ var jsonCompositeTemplate = '<div id="json-composite">'+
                                 '</div>'+
 							'</div>',
 	validatorTemplate = '<form class="JSONValidate" method="post" action="." name="JSONValidate">'+
-							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter json to validate..."></textarea>'+
+							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter anything to validate..."></textarea>'+
 							'<a href="#" title="Run validation" class="button validate"><span class="icon">Lint Me!</span></a>'+
-                            '<a href="#" title="Compress JSON" class="button compress"><span class="icon">Compress JSON</span></a>'+
+                            '<a href="#" title="Compress content" class="button compress"><span class="icon">Compress Content</span></a>'+
                             '<a href="#" title="Removes escape characters" class="button escape"><span class="text">\\\"</span></a>'+
-							'<a href="#" title="Compare two JSON sets" class="button split-view"><span class="icon">Split View</span></a>'+
+							'<a href="#" title="Compare two content sets" class="button split-view"><span class="icon">Split View</span></a>'+
 							'<a href="#" title="Delete the current data" class="button reset"><span class="icon">Reset</span></a>'+
 							'<a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a>'+
 						'</form>',
@@ -837,7 +837,8 @@ var FADE_SPEED = 100,
 	        }
 
 	        var jsonVal = $.trim(this.textarea.val());
-			this.validate();
+			// this.validate();
+            this.routeModel();
             this.textarea.scrollLeft(0);
 		},
 
@@ -886,6 +887,44 @@ var FADE_SPEED = 100,
 			this.errorView.hide();
 			this.$('.validate').removeClass('error success');
 		},
+
+        routeModel : function () {
+            var jsonVal = this.textarea.val();
+            jsonVal = jsonVal.trim();
+            if (jsonVal.startsWith("<") && jsonVal.endsWith(">")){
+                this.checkXML();
+            }else{
+                this.validate();
+            }
+        },
+
+        checkXML : function (options) {
+            options || (options = {});
+            _.defaults(options, {
+               success : $.noop,
+               error : $.noop
+            });
+
+            var jsonVal = this.textarea.val();
+            parseVal = parseXML(jsonVal);
+            this.textarea.val(parseVal);
+            result = validateXML(parseVal);
+            if(result.errorCode === 0){
+                this.$('.validate').removeClass('error').addClass('success');
+                this.errorView.hide();
+                options.success();
+            } else {
+                options.error();
+                this.textarea.focus().caret(result.errorStart, result.errorEnd);
+
+                offset = utils.getTextBoundingRect(this.textarea[0],result.errorStart, result.errorEnd, false);
+                this.errorView.setError(result.msg);
+                this.errorView.setPosition(offset);
+                this.errorView.show();
+
+                this.$('.validate').removeClass('success').addClass('error');   
+            }
+        },
 
 		validate : function (options) {
 			options || (options = {});
