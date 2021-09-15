@@ -831,17 +831,18 @@ var FADE_SPEED = 100,
 
 		onValidate : function (ev) {
 			ev.preventDefault();
-
-	        if ($.trim(this.textarea.val()).length === 0) {
+            var content = $.trim(this.textarea.val());
+	        if (content.length === 0) {
 	        	return;
 	        }
 
-            var type = this.routeModel();
-            if (type === "xml"){
+            var type = this.routeModel(content);
+            toast("Validate " + type, 2000);
+            if (type === "xml") {
                 this.checkXML();
-            }else if(type === "json"){
+            } else if(type === "json") {
                 this.validate();
-            }else{
+            } else {
             
             }
             this.textarea.scrollLeft(0);
@@ -849,14 +850,15 @@ var FADE_SPEED = 100,
 
         onCompress : function (ev){
             
-            var type = this.routeModel();
+            var content = $.trim(this.textarea.val());
+            var type = this.routeModel(content);
+            toast("Compress " + type, 2000);
             if (type === "xml") {
                 this.checkXML();
                 var content = $.trim(this.textarea.val());
                 var compress = compressXML(content, false);
                 this.textarea.val(compress);
             } else if(type === "json") {
-                var content = $.trim(this.textarea.val());
                 var compress = JSON.stringify(JSON.parse(content));
                 this.textarea.val(compress);
             } else {
@@ -905,13 +907,13 @@ var FADE_SPEED = 100,
 			this.$('.validate').removeClass('error success');
 		},
 
-        routeModel : function () {
-            var jsonVal = $.trim(this.textarea.val());
-            jsonVal = jsonVal.trim();
-            if (jsonVal.startsWith("<") && jsonVal.endsWith(">")){
+        routeModel : function (jsonVal) {
+            if (jsonVal.startsWith("<") && jsonVal.endsWith(">")) {
                 return "xml";
-            }else{
+            } else if((jsonVal.startsWith("{") && jsonVal.endsWith("}")) || (jsonVal.startsWith("[") && jsonVal.endsWith("]"))) {
                 return "json";
+            } else {
+                return "other";
             }
         },
 
