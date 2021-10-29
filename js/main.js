@@ -606,7 +606,7 @@ var jsonCompositeTemplate = '<div id="json-composite">'+
 								'<div id="tips-and-tricks">'+
 								    '<a id="close-tips" class="close-btn" href="#">X</a>'+
 								    '<h1>Tips and Tricks</h1>'+
-                                    '<p>部分内容来自互联网，如有侵权，请告知</p>'+
+                                    '<p>部分内容来自互联网，如需删除，请告知</p>'+
                                     '<p>ctrl + enter = format</p>'+
                                     '<p>tab = 4 * space</p>'+
                                 '</div>'+
