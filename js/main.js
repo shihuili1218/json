@@ -824,31 +824,14 @@ var FADE_SPEED = 100,
 		_checkForJSON : function () {
 	        if (this.json) {
 	            this.textarea.val(this.json);
-
 	            this.validate();
 	        }
 		},
 
 		onValidate : function (ev) {
 			ev.preventDefault();
-            var content = $.trim(this.textarea.val());
-	        if (content.length === 0) {
-	        	return;
-	        }
-
-            var type = this.routeModel(content);
-            toast("Content is " + type, 2000);
-            if (type === "xml") {
-                this.checkXML();
-            } else if(type === "json") {
-				this.validate();
-			} else if(type === "sql") {
-            	var parseVal = sql(content);
-				this.textarea.val(parseVal);
-			} else {
-            
-            }
-            this.textarea.scrollLeft(0);
+			this.validate();
+			this.textarea.scrollLeft(0);
 		},
 
         onCompress : function (ev){
@@ -952,35 +935,55 @@ var FADE_SPEED = 100,
             }
         },
 
-		validate : function (options) {
+		checkJSON: function (options) {
 			options || (options = {});
 
-		    _.defaults(options, {
-			   success : $.noop,
-			   error : $.noop
-		    });
+			_.defaults(options, {
+				success : $.noop,
+				error : $.noop
+			});
 
-	        var jsonVal = this.textarea.val(),
-	            result;
+			var jsonVal = this.textarea.val(),
+				result;
 
-	        try {
-	            result = jsl.parser.parse(jsonVal);
+			try {
+				result = jsl.parser.parse(jsonVal);
 
-	            if (result) {
-	                this._appendResult(jsonVal);
+				if (result) {
+					this._appendResult(jsonVal);
 
-	                options.success();
+					options.success();
 
-	                return;
-	            }
+					return;
+				}
 
-	            options.error();
+				options.error();
 
-	        } catch (parseException) {
-	        	this._handleParseException()
+			} catch (parseException) {
+				this._handleParseException()
 
-	            options.error();
-	        }
+				options.error();
+			}
+		},
+
+		validate : function () {
+			var content = $.trim(this.textarea.val());
+			if (content.length === 0) {
+				return;
+			}
+
+			var type = this.routeModel(content);
+			toast("Content is " + type, 2000);
+			if (type === "xml") {
+				this.checkXML();
+			} else if(type === "json") {
+				this.checkJSON();
+			} else if(type === "sql") {
+				var parseVal = sql(content);
+				this.textarea.val(parseVal);
+			} else {
+
+			}
 		},
 
 		 _appendResult : function (jsonVal) {
