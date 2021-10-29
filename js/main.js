@@ -391,12 +391,20 @@ var htmlDiff = function(before, after) {
     var a, b, con, diff, i, results = [];
     con = {
         '=': function(x) {
+			x = x.replaceAll("<","&lt;");
+			x = x.replaceAll(">","&gt;");
+
             return x;
         },
         '+': function(x) {
+			x = x.replaceAll("<","&lt;");
+			x = x.replaceAll(">","&gt;");
+
             return '<ins>' + x + '</ins>';
         },
         '-': function(x) {
+			x = x.replaceAll("<","&lt;");
+			x = x.replaceAll(">","&gt;");
             return '<del>' + x + '</del>';
         }
     };
