@@ -2,7 +2,7 @@ var toast = function (msg,duration){
   duration=isNaN(duration)?3000:duration;
   var m = document.createElement('div');
   m.innerHTML = msg;
-  m.style.cssText="max-width:60%;min-width: 150px;padding:0 14px;height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 5%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 0, 0,.7);font-size: 16px;";
+  m.style.cssText="max-width:60%;min-width: 150px;padding:0 14px;height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 95%;right: 0%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 139, 69,.7);font-size: 16px;";
   document.body.appendChild(m);
   setTimeout(function() {
     var d = 0.5;

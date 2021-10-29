@@ -612,7 +612,7 @@ var jsonCompositeTemplate = '<div id="json-composite">'+
                                 '</div>'+
 							'</div>',
 	validatorTemplate = '<form class="JSONValidate" method="post" action="." name="JSONValidate">'+
-							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter anything(json, xml, javascript) to validate..."></textarea>'+
+							'<textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter anything(json, xml, sql) to validate..."></textarea>'+
 							'<a href="#" title="Run validation" class="button validate"><span class="icon">Lint Me!</span></a>'+
                             '<a href="#" title="Compress content" class="button compress"><span class="icon">Compress Content</span></a>'+
                             '<a href="#" title="Removes escape characters" class="button escape"><span class="text">\\\"</span></a>'+
@@ -837,12 +837,15 @@ var FADE_SPEED = 100,
 	        }
 
             var type = this.routeModel(content);
-            toast("Validate " + type, 2000);
+            toast("Content is " + type, 2000);
             if (type === "xml") {
                 this.checkXML();
             } else if(type === "json") {
-                this.validate();
-            } else {
+				this.validate();
+			} else if(type === "sql") {
+            	var parseVal = sql(content);
+				this.textarea.val(parseVal);
+			} else {
             
             }
             this.textarea.scrollLeft(0);
@@ -852,16 +855,17 @@ var FADE_SPEED = 100,
             
             var content = $.trim(this.textarea.val());
             var type = this.routeModel(content);
-            toast("Compress " + type, 2000);
             if (type === "xml") {
                 this.checkXML();
-                var content = $.trim(this.textarea.val());
                 var compress = compressXML(content, false);
                 this.textarea.val(compress);
             } else if(type === "json") {
                 var compress = JSON.stringify(JSON.parse(content));
                 this.textarea.val(compress);
-            } else {
+            } else if(type === "sql") {
+				var parseVal = sqlmin(content);
+				this.textarea.val(parseVal);
+			} else {
             
             }
 
@@ -907,12 +911,15 @@ var FADE_SPEED = 100,
 			this.$('.validate').removeClass('error success');
 		},
 
-        routeModel : function (jsonVal) {
-            if (jsonVal.startsWith("<") && jsonVal.endsWith(">")) {
+        routeModel : function (content) {
+			upper = content.toUpperCase();
+            if (content.startsWith("<") && content.endsWith(">")) {
                 return "xml";
-            } else if((jsonVal.startsWith("{") && jsonVal.endsWith("}")) || (jsonVal.startsWith("[") && jsonVal.endsWith("]"))) {
-                return "json";
-            } else {
+            } else if((content.startsWith("{") && content.endsWith("}")) || (content.startsWith("[") && content.endsWith("]"))) {
+				return "json";
+			} else if(upper.startsWith("SELECT") || upper.startsWith("INSERT") || upper.startsWith("DELETE") || upper.startsWith("UPDATE")) {
+				return "sql";
+			} else {
                 return "other";
             }
         },
