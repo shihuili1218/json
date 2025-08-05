@@ -1001,6 +1001,13 @@ var FADE_SPEED = 100,
 
 			this.$('.validate').removeClass('error').addClass('success');
 			this.errorView.hide();
+			
+			// 添加折叠按钮
+			if (window.JsonFoldHelper) {
+				setTimeout(function() {
+					window.JsonFoldHelper.addFoldButtons();
+				}, 200);
+			}
 	    },
 
 	    /**
