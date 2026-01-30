@@ -1,0 +1,66 @@
+{
+  "company": "科技公司",
+  "employees": [
+    {
+      "id": 1,
+      "name": "张三",
+      "position": "开发工程师",
+      "department": {
+        "name": "技术部",
+        "location": "北京"
+      },
+      "skills": ["Java", "Python", "JavaScript"],
+      "projects": [
+        {
+          "name": "项目A",
+          "status": "进行中"
+        },
+        {
+          "name": "项目B",
+          "status": "已完成"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "李四",
+      "position": "产品经理",
+      "department": {
+        "name": "产品部",
+        "location": "上海"
+      },
+      "skills": ["需求分析", "原型设计", "项目管理"],
+      "projects": [
+        {
+          "name": "项目C",
+          "status": "规划中"
+        }
+      ]
+    }
+  ],
+  "departments": [
+    {
+      "id": 1,
+      "name": "技术部",
+      "headcount": 50,
+      "budget": {
+        "yearly": 5000000,
+        "quarterly": [1250000, 1250000, 1250000, 1250000]
+      }
+    },
+    {
+      "id": 2,
+      "name": "产品部",
+      "headcount": 20,
+      "budget": {
+        "yearly": 2000000,
+        "quarterly": [500000, 500000, 500000, 500000]
+      }
+    }
+  ],
+  "metadata": {
+    "created": "2025-01-01",
+    "lastModified": "2025-01-30",
+    "version": "1.0.0"
+  }
+}

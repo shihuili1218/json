@@ -48,7 +48,7 @@ textarea { resize:both; }
 .linedtextarea textarea, .linedwrap .codelines .lineno {
 	font-size: 12px;
 	font-family: monospace;
-	line-height: normal !important;
+	line-height: 1.2 !important;
 }
 
 .linedtextarea textarea {
@@ -80,6 +80,12 @@ textarea { resize:both; }
 	padding-top: 0.0em;
 	text-align: right;
 	white-space: nowrap;
+	line-height: 1.2 !important;
+	height: 14.4px;
+	overflow: visible;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 }
 
 .linedwrap .codelines .lineselect {
