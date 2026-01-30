@@ -627,8 +627,7 @@ var jsonCompositeTemplate = '<div id="json-composite">'+
 							'<a href="#" title="Compare two content sets" class="button split-view"><span class="icon">Split View</span></a>'+
 							'<a href="#" title="Delete the current data" class="button reset"><span class="icon">Reset</span></a>'+
 							'<a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a>'+
-							'<a href="#" title="Expand all folds" class="button expand-all" style="display:none;"><span class="text">[ + ]</span></a>'+
-							'<a href="#" title="Collapse all folds" class="button fold-all" style="display:none;"><span class="text">[ − ]</span></a>'+
+							'<a href="#" title="Toggle fold/unfold all" class="button toggle-fold" style="display:none;"><span class="text">±</span></a>'+
 						'</form>',
 	errorTemplate = '<div class="error-view"><a class="close-btn" href="#">X</a><span class="arrow-down"></span><pre class="results"></pre></div>',
 	diffTemplate = '<div id="diff-view"><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a><a href="#" title="Cancel diff" class="button cancel-diff"><span class="icon">Cancel diff</span></a><div class="json_input" contenteditable="true"></div></div>';
@@ -766,8 +765,7 @@ var FADE_SPEED = 100,
 			'click .diff'			: 'onDiff',
             'click .compress'       : 'onCompress',
             'click .escape'         : 'onEscape',
-            'click .expand-all'     : 'onExpandAll',
-            'click .fold-all'       : 'onFoldAll',
+            'click .toggle-fold'    : 'onToggleFold',
 		},
 
 		initialize : function () {
@@ -873,17 +871,15 @@ var FADE_SPEED = 100,
             this.textarea.val(content);
         },
 
-		onExpandAll : function (ev) {
+		onToggleFold : function (ev) {
 			ev.preventDefault();
-			if (window.JsonFoldHelper && window.JsonFoldHelper.expandAll) {
-				window.JsonFoldHelper.expandAll();
-			}
-		},
-
-		onFoldAll : function (ev) {
-			ev.preventDefault();
-			if (window.JsonFoldHelper && window.JsonFoldHelper.foldAll) {
-				window.JsonFoldHelper.foldAll();
+			if (window.JsonFoldHelper) {
+				// 如果有任何折叠，则全部展开；否则全部折叠
+				if (window.JsonFoldHelper.foldedRanges.size > 0) {
+					window.JsonFoldHelper.expandAll();
+				} else {
+					window.JsonFoldHelper.foldAll();
+				}
 			}
 		},
 
@@ -914,8 +910,7 @@ var FADE_SPEED = 100,
 			this.textarea.val('').focus();
 			this.resetErrors();
 			// 隐藏折叠按钮
-			this.$('.expand-all').hide();
-			this.$('.fold-all').hide();
+			this.$('.toggle-fold').hide();
 		},
 
 		resetErrors : function () {
@@ -943,6 +938,11 @@ var FADE_SPEED = 100,
                error : $.noop
             });
 
+            // 格式化前先展开所有折叠内容
+            if (window.JsonFoldHelper && window.JsonFoldHelper.foldedRanges.size > 0) {
+                window.JsonFoldHelper.expandAll();
+            }
+
             var jsonVal = this.textarea.val();
             parseVal = parseXML(jsonVal);
             this.textarea.val(parseVal);
@@ -956,9 +956,8 @@ var FADE_SPEED = 100,
                 if (window.JsonFoldHelper) {
                     setTimeout(function() {
                         window.JsonFoldHelper.addFoldButtons();
-                        // 显示折叠/展开全部按钮
-                        self.$('.expand-all').show();
-                        self.$('.fold-all').show();
+                        // 显示折叠/展开切换按钮
+                        self.$('.toggle-fold').show();
                     }, 200);
                 }
 
@@ -983,6 +982,11 @@ var FADE_SPEED = 100,
 				success : $.noop,
 				error : $.noop
 			});
+
+			// 格式化前先展开所有折叠内容
+			if (window.JsonFoldHelper && window.JsonFoldHelper.foldedRanges.size > 0) {
+				window.JsonFoldHelper.expandAll();
+			}
 
 			var jsonVal = this.textarea.val(),
 				result;
@@ -1040,9 +1044,8 @@ var FADE_SPEED = 100,
 			if (window.JsonFoldHelper) {
 				setTimeout(function() {
 					window.JsonFoldHelper.addFoldButtons();
-					// 显示折叠/展开全部按钮
-					self.$('.expand-all').show();
-					self.$('.fold-all').show();
+					// 显示折叠/展开切换按钮
+					self.$('.toggle-fold').show();
 				}, 200);
 			}
 	    },

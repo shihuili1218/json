@@ -238,32 +238,26 @@ box-shadow: 0 1px 0 #F1F1F1;
 		background-position: -22px 0;
 }
 
-.expand-all {
+.toggle-fold {
 	top: 220px;
 }
 
-.fold-all {
-	top: 270px;
-}
-
-.expand-all .text,
-.fold-all .text {
+.toggle-fold .text {
 	opacity: 0.6;
 	font-weight: bold;
 	font-size: 14px;
 }
 
-.expand-all:hover .text,
-.fold-all:hover .text {
+.toggle-fold:hover .text {
 	opacity: 1;
 }
 
 .primary .split-view {
-	top: 320px;
+	top: 270px;
 }
 
 .split-view {
-	top: 370px;
+	top: 320px;
 	display: none;
 }
 
@@ -301,7 +295,7 @@ del {
 }
 
 .diff {
-	top: 320px;
+	top: 270px;
 	display: none;
 }
 
